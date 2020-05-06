@@ -1,0 +1,34 @@
+#!/bin/sh
+
+case "$1" in
+wipeout)
+	echo "Removing ${builddir}"
+	exec rm -rfI "${builddir}"
+	;;
+configure)
+	args=(
+		-Dprefix="${builddir}"/install
+		-Dc_args="${cflags}"
+		-Dcpp_args="${cxxflags}"
+		-Dtools=intel
+		-Dbuild-tests=true
+		-Ddri-drivers=i965
+		-Dvulkan-drivers=intel
+		-Dgallium-drivers=iris
+		-Dgallium-va=auto
+		-Dbuildtype="${buildtype}"
+		# -Db_sanitize=address,undefined 
+		-Dbackend=ninja
+		"${builddir}"
+	)
+	exec meson "${args[@]}"
+	;;
+build)
+	exec nj "${buildtype}" install
+	;;
+esac
+
+export LD_LIBRARY_PATH="${builddir}"/install/lib64
+export LIBGL_DRIVERS_PATH="${builddir}"/install/lib64/dri
+export VK_ICD_FILENAMES="${builddir}"/install/share/vulkan/icd.d/intel_icd.x86_64.json
+exec $@

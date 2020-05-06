@@ -1,0 +1,8 @@
+#!/bin/sh
+
+export cflags="-ggdb3 -O0 -march=native -pipe"
+export cxxflags="${cflags}"
+export buildtype=debug
+export builddir=~/projects/mesa/build-debug
+
+exec mesa-run $@
