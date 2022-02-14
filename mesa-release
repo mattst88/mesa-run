@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 export cflags="-O2 -march=native -fno-omit-frame-pointer -pipe"
 export cxxflags="${cflags}"

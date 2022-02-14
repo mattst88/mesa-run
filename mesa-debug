@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 export cflags="-ggdb3 -O0 -march=native -pipe"
 export cxxflags="${cflags}"
