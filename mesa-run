@@ -24,6 +24,11 @@ wipeout)
 	exec rm -rfI "${builddir}"
 	;;
 configure)
+	#export CC=clang
+	#export CXX=clang++
+	#export CC_LD=lld
+	#export CXX_LD=lld
+
 	args=(
 		-Dprefix="${prefix}"
 		-Dc_args="${cflags}"
