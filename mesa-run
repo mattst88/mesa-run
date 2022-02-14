@@ -12,7 +12,6 @@ configure)
 		-Dcpp_args="${cxxflags}"
 		-Dtools=intel
 		-Dbuild-tests=true
-		-Ddri-drivers=i965
 		-Dvulkan-drivers=intel
 		-Dgallium-drivers=iris
 		-Dgallium-va=auto
