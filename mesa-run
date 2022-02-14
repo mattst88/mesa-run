@@ -16,8 +16,8 @@ configure)
 		-Dgallium-drivers=iris
 		-Dgallium-va=auto
 		-Dbuildtype="${buildtype}"
-		# -Db_sanitize=address,undefined 
 		-Dbackend=ninja
+		"${extra_args}"
 		"${builddir}"
 	)
 	exec meson "${args[@]}"
