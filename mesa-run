@@ -8,13 +8,13 @@ x86_64)
 	vk_icd="intel_icd.${machine}.json"
 	vulkan_drivers=intel
 	gallium_drivers=iris
-	tools=intel
+	tools=drm-shim,intel
 	;;
 aarch64)
 	vk_icd="freedreno_icd.${machine}.json"
 	vulkan_drivers=freedreno
 	gallium_drivers=freedreno
-	tools=freedreno
+	tools=drm-shim,freedreno
 	;;
 esac
 
