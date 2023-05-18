@@ -1,0 +1,81 @@
+#!/bin/bash
+
+die() {
+	echo "$1"
+	exit 255
+}
+
+readonly -A CHROMEOS_DEQP_BIN=(
+	[vk]=/usr/local/deqp/external/vulkancts/modules/vulkan/deqp-vk
+	[egl]=/usr/local/deqp/modules/egl/deqp-egl
+	[gles2]=/usr/local/deqp/modules/gles2/deqp-gles2
+	[gles3]=/usr/local/deqp/modules/gles3/deqp-gles3
+	[gles31]=/usr/local/deqp/modules/gles31/deqp-gles31
+)
+
+readonly -A CHROMEOS_DEQP_CASELIST=(
+	[vk]=/usr/local/deqp/caselists/vk.txt
+	[egl]=/usr/local/deqp/caselists/egl.txt
+	[gles2]=/usr/local/deqp/caselists/gles2.txt
+	[gles3]=/usr/local/deqp/caselists/gles3.txt
+	[gles31]=/usr/local/deqp/caselists/gles31.txt
+)
+
+readonly CHROMEOS_TESTLOG_TO_XML=/usr/local/deqp/executor/testlog-to-xml
+
+if [[ $# -eq 1 ]]; then
+	# shellcheck source=/etc/os-release
+	source <(grep '^ID=' /etc/os-release)
+	if [[ $ID != chromeos ]]; then
+		die "Must provide paths to the deqp binary and caselist file"
+	else
+		case "$1" in
+		vk|egl|gles2|gles3|gles31)
+			DEQP_BIN="${CHROMEOS_DEQP_BIN["$1"]}"
+			CASELIST="${CHROMEOS_DEQP_CASELIST["$1"]}"
+			TESTLOG_TO_XML="${CHROMEOS_TESTLOG_TO_XML}"
+			;;
+		*)
+			die "Suite must be one of vk|egl|gles2|gles3|gles31"
+			;;
+		esac
+	fi
+else
+	DEQP_BIN="$1"
+	CASELIST="$2"
+	TESTLOG_TO_XML="$3"
+fi
+OUTPUT_DIR=$(basename "${DEQP_BIN}")
+
+if [[ ! -x $DEQP_BIN ]]; then
+	die "deqp binary '$DEQP_BIN' does not exist or is not executable"
+fi
+
+if [[ ! -r $CASELIST ]]; then
+	die "Caselist '$CASELIST' does not exist or is not readable"
+fi
+
+if [[ ! -x $TESTLOG_TO_XML ]]; then
+	die "testlog-to-xml binary '$TESTLOG_TO_XML' does not exist or is not executable"
+fi
+
+if [[ -e $OUTPUT_DIR ]]; then
+	die "Output directory '$OUTPUT_DIR' already exists"
+fi
+
+DEQP_RUNNER_ARGS=(
+	--caselist "${CASELIST}"
+	--deqp "${DEQP_BIN}"
+	--testlog-to-xml "${TESTLOG_TO_XML}"
+	--output "${OUTPUT_DIR}"
+)
+
+DEQP_OPTIONS=(
+	--deqp-surface-width=256
+	--deqp-surface-height=256
+	--deqp-surface-type=pbuffer
+	--deqp-gl-config-name=rgba8888d24s8ms0
+	--deqp-visibility=hidden
+)
+
+exec deqp-runner run "${DEQP_RUNNER_ARGS[@]}" -- "${DEQP_OPTIONS[@]}"
