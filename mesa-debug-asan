@@ -6,4 +6,4 @@ export buildtype=debug
 export builddir=~/projects/mesa/build-debug-asan
 export extra_args=-Db_sanitize=address,undefined
 
-exec mesa-run $@
+exec mesa-run "$@"

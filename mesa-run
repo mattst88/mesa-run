@@ -1,5 +1,11 @@
 #!/bin/bash
 
+die() {
+	echo "$1"
+	exit 255
+}
+
+[[ -z ${builddir} ]] && die "builddir must be set"
 prefix="${builddir}"/install
 
 machine=$(uname -m)
@@ -52,12 +58,11 @@ build)
 esac
 
 if ! command -v jq &> /dev/null; then
-	echo "jq needs to be installed"
-	exit -1
+	die "jq needs to be installed"
 fi
 
 libdir=$(jq -r '.[] | select(.name == "libdir").value' "${builddir}"/meson-info/intro-buildoptions.json)
 export LD_LIBRARY_PATH="${prefix}/${libdir}:${LD_LIBRARY_PATH}"
 export LIBGL_DRIVERS_PATH="${prefix}/${libdir}"/dri
 export VK_ICD_FILENAMES="${prefix}"/share/vulkan/icd.d/"${vk_icd}"
-exec $@
+exec "$@"

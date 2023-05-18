@@ -5,4 +5,4 @@ export cxxflags="${cflags}"
 export buildtype=debug
 export builddir=~/projects/mesa/build-debug
 
-exec mesa-run $@
+exec mesa-run "$@"
