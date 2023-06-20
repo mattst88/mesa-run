@@ -48,7 +48,7 @@ configure)
 		-Dgallium-xa=disabled
 		-Dbuildtype="${buildtype}"
 		-Dbackend=ninja
-		"${extra_args}"
+		"${extra_args[@]}"
 		"${builddir}"
 	)
 	exec meson setup --reconfigure "${args[@]}"
