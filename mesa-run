@@ -49,6 +49,8 @@ configure)
 		-Dgallium-drivers="${gallium_drivers}"
 		-Dgallium-va=auto
 		-Dgallium-xa=disabled
+		-Dvideo-codecs="vc1dec,h264dec,h264enc,h265dec,h265enc"
+		-Dvulkan-beta=true
 		-Dbuildtype="${buildtype}"
 		-Dbackend=ninja
 		"${extra_args[@]}"
