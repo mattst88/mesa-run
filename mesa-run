@@ -15,6 +15,7 @@ x86_64)
 	vulkan_drivers=intel
 	gallium_drivers=iris
 	tools=drm-shim,intel
+	extra_args+=(-Dintel-clc=enabled)
 	;;
 aarch64|arm*)
 	vk_icd="freedreno_icd.${machine}.json"
@@ -31,12 +32,14 @@ wipe|wipeout)
 	;;
 configure)
 	export LLVM_MAJOR_VERSION="16"
+	export LLVM_CONFIG="/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/llvm-config"
 	#export CC="/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/clang"
 	#export CXX="/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/clang++"
 	#export CC_LD="/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/lld"
 	#export CXX_LD="${CC_LD}"
 
 	args=(
+		--pkg-config-path "/usr/lib/llvm/${LLVM_MAJOR_VERSION}/lib64/pkgconfig"
 		-Dprefix="${prefix}"
 		-Dc_args="${cflags}"
 		-Dcpp_args="${cxxflags}"
