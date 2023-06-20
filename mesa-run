@@ -25,9 +25,9 @@ aarch64|arm*)
 esac
 
 case "$1" in
-wipeout)
+wipe|wipeout)
 	echo "Removing ${builddir}"
-	exec rm -rfI "${builddir}"
+	exec meson setup --wipe "${builddir}"
 	;;
 configure)
 	#export CC=clang
@@ -50,7 +50,7 @@ configure)
 		"${extra_args}"
 		"${builddir}"
 	)
-	exec meson "${args[@]}"
+	exec meson setup --reconfigure "${args[@]}"
 	;;
 build)
 	exec nj "${buildtype}" install
