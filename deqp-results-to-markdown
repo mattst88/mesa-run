@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+
+import csv
+import collections
+
+
+def main():
+    outcomes = ('Pass', 'Fail', 'Skip', 'Warn', 'Timeout', 'Flake')
+    header = ''.join([
+        '|                  | ', ' | '.join(outcomes), ' |\n',
+        '| ---------------- | ', ' | '.join([(len(o) - 1) * '-' + ':' for o in outcomes]), ' |',
+    ])
+    test_results = ''.join([
+        '| **dEQP-{API}**   |{', '}|{'.join(outcomes), '}|',
+    ])
+
+    print(header)
+
+    for API in ('gles2', 'gles3', 'gles31', 'vk'):
+        histogram = collections.Counter()
+        for o in outcomes:
+            histogram[o] = 0
+
+        with open(f'deqp-{API}/results.csv') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                test_result = row[1]
+                histogram[test_result] += 1
+
+        for o in outcomes:
+            if histogram[o] == 0:
+                histogram[o] = ' '
+
+        print(test_results.format(API=API.upper(), **histogram))
+
+
+if __name__ == '__main__':
+    main()
