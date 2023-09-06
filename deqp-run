@@ -13,6 +13,13 @@ readonly -A CHROMEOS_DEQP_BIN=(
 	[gles31]=/usr/local/deqp/modules/gles31/deqp-gles31
 )
 
+readonly -A LINUX_DEQP_BIN=(
+	[vk]=build/external/vulkancts/modules/vulkan/deqp-vk
+	[egl]=build/modules/egl/deqp-egl
+	[gles2]=build/modules/gles2/deqp-gles2
+	[gles3]=build/modules/gles3/deqp-gles3
+	[gles31]=build/modules/gles31/deqp-gles31
+)
 readonly -A CHROMEOS_DEQP_CASELIST=(
 	[vk]=/usr/local/deqp/caselists/vk.txt
 	[egl]=/usr/local/deqp/caselists/egl.txt
@@ -21,25 +28,37 @@ readonly -A CHROMEOS_DEQP_CASELIST=(
 	[gles31]=/usr/local/deqp/caselists/gles31.txt
 )
 
+readonly -A LINUX_DEQP_CASELIST=(
+	[vk]=external/vulkancts/mustpass/main/vk-default.txt
+	[egl]=android/cts/master/egl-master.txt
+	[gles2]=android/cts/main/gles2-master.txt
+	[gles3]=android/cts/main/gles3-master.txt
+	[gles31]=android/cts/main/gles31-master.txt
+)
+
 readonly CHROMEOS_TESTLOG_TO_XML=/usr/local/deqp/executor/testlog-to-xml
 
+readonly LINUX_TESTLOG_TO_XML=build/executor/testlog-to-xml
+
 if [[ $# -eq 1 ]]; then
-	# shellcheck source=/etc/os-release
-	source <(grep '^ID=' /etc/os-release)
-	if [[ $ID != chromeos ]]; then
-		die "Must provide paths to the deqp binary and caselist file"
-	else
-		case "$1" in
-		vk|egl|gles2|gles3|gles31)
+	case "$1" in
+	vk|egl|gles2|gles3|gles31)
+		# shellcheck source=/etc/os-release
+		source <(grep '^ID=' /etc/os-release)
+		if [[ $ID == chromeos ]]; then
 			DEQP_BIN="${CHROMEOS_DEQP_BIN["$1"]}"
 			CASELIST="${CHROMEOS_DEQP_CASELIST["$1"]}"
 			TESTLOG_TO_XML="${CHROMEOS_TESTLOG_TO_XML}"
-			;;
-		*)
-			die "Suite must be one of vk|egl|gles2|gles3|gles31"
-			;;
-		esac
-	fi
+		else
+			DEQP_BIN="$(realpath ${LINUX_DEQP_BIN["$1"]})"
+			CASELIST="$(realpath ${LINUX_DEQP_CASELIST["$1"]})"
+			TESTLOG_TO_XML="$(realpath ${LINUX_TESTLOG_TO_XML})"
+		fi
+		;;
+	*)
+		die "Suite must be one of vk|egl|gles2|gles3|gles31"
+		;;
+	esac
 else
 	DEQP_BIN="$1"
 	CASELIST="$2"
