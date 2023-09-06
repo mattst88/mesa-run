@@ -40,23 +40,41 @@ readonly CHROMEOS_TESTLOG_TO_XML=/usr/local/deqp/executor/testlog-to-xml
 
 readonly LINUX_TESTLOG_TO_XML=build/executor/testlog-to-xml
 
+readonly -a DEQP_OPTIONS=(
+	--deqp-surface-width=256
+	--deqp-surface-height=256
+	--deqp-surface-type=pbuffer
+	--deqp-gl-config-name=rgba8888d24s8ms0
+	--deqp-visibility=hidden
+)
+
 if [[ $# -eq 1 ]]; then
-	case "$1" in
+	if [[ $1 == dEQP-* ]]; then
+		single_test="$1"
+
+		api="${1%%.*}"
+		api="${api#dEQP-}"
+		api="${api,,}"
+	else
+		api="$1"
+	fi
+
+	case "${api}" in
 	vk|egl|gles2|gles3|gles31)
 		# shellcheck source=/etc/os-release
 		source <(grep '^ID=' /etc/os-release)
 		if [[ $ID == chromeos ]]; then
-			DEQP_BIN="${CHROMEOS_DEQP_BIN["$1"]}"
-			CASELIST="${CHROMEOS_DEQP_CASELIST["$1"]}"
+			DEQP_BIN="${CHROMEOS_DEQP_BIN[$api]}"
+			CASELIST="${CHROMEOS_DEQP_CASELIST[$api]}"
 			TESTLOG_TO_XML="${CHROMEOS_TESTLOG_TO_XML}"
 		else
-			DEQP_BIN="$(realpath ${LINUX_DEQP_BIN["$1"]})"
-			CASELIST="$(realpath ${LINUX_DEQP_CASELIST["$1"]})"
-			TESTLOG_TO_XML="$(realpath ${LINUX_TESTLOG_TO_XML})"
+			DEQP_BIN="${LINUX_DEQP_BIN[$api]}"
+			CASELIST="${LINUX_DEQP_CASELIST[$api]}"
+			TESTLOG_TO_XML="${LINUX_TESTLOG_TO_XML}"
 		fi
 		;;
 	*)
-		die "Suite must be one of vk|egl|gles2|gles3|gles31"
+		die "Argument must be one of vk|egl|gles2|gles3|gles31 or a dEQP-* test name"
 		;;
 	esac
 else
@@ -64,37 +82,37 @@ else
 	CASELIST="$2"
 	TESTLOG_TO_XML="$3"
 fi
-OUTPUT_DIR=$(basename "${DEQP_BIN}")
 
 if [[ ! -x $DEQP_BIN ]]; then
 	die "deqp binary '$DEQP_BIN' does not exist or is not executable"
+fi
+DEQP_BIN="$(realpath "${DEQP_BIN}")"
+
+if [[ -n $single_test ]]; then
+	cd "$(dirname "${DEQP_BIN}")" || die "can't cd"
+	exec "${DEQP_BIN}" "${DEQP_OPTIONS[@]}" -n "${single_test}"
 fi
 
 if [[ ! -r $CASELIST ]]; then
 	die "Caselist '$CASELIST' does not exist or is not readable"
 fi
+CASELIST="$(realpath "${CASELIST}")"
 
 if [[ ! -x $TESTLOG_TO_XML ]]; then
 	die "testlog-to-xml binary '$TESTLOG_TO_XML' does not exist or is not executable"
 fi
+TESTLOG_TO_XML="$(realpath "${TESTLOG_TO_XML}")"
 
 if [[ -e $OUTPUT_DIR ]]; then
 	die "Output directory '$OUTPUT_DIR' already exists"
 fi
+OUTPUT_DIR=$(basename "${DEQP_BIN}")
 
 DEQP_RUNNER_ARGS=(
 	--caselist "${CASELIST}"
 	--deqp "${DEQP_BIN}"
 	--testlog-to-xml "${TESTLOG_TO_XML}"
 	--output "${OUTPUT_DIR}"
-)
-
-DEQP_OPTIONS=(
-	--deqp-surface-width=256
-	--deqp-surface-height=256
-	--deqp-surface-type=pbuffer
-	--deqp-gl-config-name=rgba8888d24s8ms0
-	--deqp-visibility=hidden
 )
 
 exec deqp-runner run "${DEQP_RUNNER_ARGS[@]}" -- "${DEQP_OPTIONS[@]}"
