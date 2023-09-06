@@ -21,11 +21,14 @@ def main():
         for o in outcomes:
             histogram[o] = 0
 
-        with open(f'deqp-{API}/results.csv') as csvfile:
-            reader = csv.reader(csvfile)
-            for row in reader:
-                test_result = row[1]
-                histogram[test_result] += 1
+        try:
+            with open(f'deqp-{API}/results.csv') as csvfile:
+                reader = csv.reader(csvfile)
+                for row in reader:
+                    test_result = row[1]
+                    histogram[test_result] += 1
+        except IOError as error:
+            continue
 
         for o in outcomes:
             if histogram[o] == 0:
