@@ -73,5 +73,8 @@ cd "$builddir"
 extratargets="$(cat extratargets 2>/dev/null)"
 targets="${@:-all $extratargets}"
 
-ninja $targets
-[[ "$targets" == all* ]] && [ -e install ] && ninja install > /dev/null
+ninja $targets || exit $?
+
+if [[ "$targets" == all* ]] && [ -e install ]; then
+    ninja install > /dev/null
+fi
