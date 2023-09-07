@@ -18,15 +18,15 @@ A collection of scripts to build and test [Mesa](https://www.mesa3d.org/) withou
 
 ### Configure and build debug build
 
-```sh
-mesa-debug configure
-nj debug install
+```console
+$ mesa-debug configure
+$ nj debug install
 ```
 
 ### Run program with local Mesa build
 
-```sh
-mesa-debug glxinfo
+```console
+$ mesa-debug glxinfo
 ```
 
 ### Run dEQP
@@ -37,20 +37,20 @@ On desktop Linux, `deqp-run` should be run from a git checkout of [VK-GL-CTS](ht
 
 #### Single test
 
-```sh
-deqp-run dEQP-VK.graphicsfuzz.spv-stable-pillars-volatile-nontemporal-store
+```console
+$ deqp-run dEQP-VK.graphicsfuzz.spv-stable-pillars-volatile-nontemporal-store
 ```
 
 #### Test suite
 
-```sh
-deqp-run vk
+```console
+$ deqp-run vk
 ```
 
 ### Make Markdown table of dEQP test results
 
-```sh
-deqp-results-to-markdown 
+```console
+$ deqp-results-to-markdown
 ```
 
 #### Example output
