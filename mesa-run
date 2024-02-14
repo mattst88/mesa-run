@@ -31,7 +31,7 @@ wipe|wipeout)
 	exec meson setup --wipe "${builddir}"
 	;;
 configure)
-	export LLVM_MAJOR_VERSION="16"
+	export LLVM_MAJOR_VERSION="17"
 	export LLVM_CONFIG="/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/llvm-config"
 	#export CC="/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/clang"
 	#export CXX="/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/clang++"
