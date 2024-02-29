@@ -21,11 +21,11 @@ readonly -A LINUX_DEQP_BIN=(
 	[gles31]=build/modules/gles31/deqp-gles31
 )
 readonly -A CHROMEOS_DEQP_CASELIST=(
-	[vk]=/usr/local/deqp/caselists/vk.txt
-	[egl]=/usr/local/deqp/caselists/egl.txt
-	[gles2]=/usr/local/deqp/caselists/gles2.txt
-	[gles3]=/usr/local/deqp/caselists/gles3.txt
-	[gles31]=/usr/local/deqp/caselists/gles31.txt
+	[vk]=/usr/local/deqp/caselists/vk.txt.zst
+	[egl]=/usr/local/deqp/caselists/egl.txt.zst
+	[gles2]=/usr/local/deqp/caselists/gles2.txt.zst
+	[gles3]=/usr/local/deqp/caselists/gles3.txt.zst
+	[gles31]=/usr/local/deqp/caselists/gles31.txt.zst
 )
 
 readonly -A LINUX_DEQP_CASELIST=(
