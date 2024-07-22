@@ -11,7 +11,6 @@ prefix="${builddir}"/install
 machine=$(uname -m)
 case "$machine" in
 x86_64)
-	vk_icd="intel_icd.${machine}.json"
 	vulkan_drivers=intel
 	gallium_drivers=iris
 	tools=drm-shim,intel
@@ -21,7 +20,6 @@ x86_64)
 	)
 	;;
 aarch64|arm*)
-	vk_icd="freedreno_icd.${machine}.json"
 	vulkan_drivers=freedreno
 	gallium_drivers=freedreno
 	tools=drm-shim,freedreno
@@ -68,12 +66,4 @@ build)
 	;;
 esac
 
-if ! command -v jq &> /dev/null; then
-	die "jq needs to be installed"
-fi
-
-libdir=$(jq -r '.[] | select(.name == "libdir").value' "${builddir}"/meson-info/intro-buildoptions.json)
-export LD_LIBRARY_PATH="${prefix}/${libdir}:${LD_LIBRARY_PATH}"
-export LIBGL_DRIVERS_PATH="${prefix}/${libdir}"/dri
-export VK_ICD_FILENAMES="${prefix}"/share/vulkan/icd.d/"${vk_icd}"
-LD_PRELOAD="${GCC_ASAN_PRELOAD}" exec "$@"
+LD_PRELOAD="${GCC_ASAN_PRELOAD}" exec meson devenv -C "${builddir}" -w "${PWD}" "$@"
