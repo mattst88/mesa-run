@@ -4,6 +4,6 @@ export cflags="-ggdb3 -O0 -march=native -pipe"
 export cxxflags="${cflags}"
 export buildtype=debug
 export builddir=~/projects/mesa/build-debug-asan
-export extra_args=(-Db_sanitize="address,undefined")
+export extra_args=-Db_sanitize="address,undefined"
 
 exec mesa-run "$@"
