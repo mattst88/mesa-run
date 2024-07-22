@@ -15,7 +15,10 @@ x86_64)
 	vulkan_drivers=intel
 	gallium_drivers=iris
 	tools=drm-shim,intel
-	extra_args+=(-Dintel-clc=enabled)
+	extra_args+=(
+		-Dintel-clc=enabled
+		-Dintel-rt=enabled
+	)
 	;;
 aarch64|arm*)
 	vk_icd="freedreno_icd.${machine}.json"
