@@ -75,4 +75,4 @@ libdir=$(jq -r '.[] | select(.name == "libdir").value' "${builddir}"/meson-info/
 export LD_LIBRARY_PATH="${prefix}/${libdir}:${LD_LIBRARY_PATH}"
 export LIBGL_DRIVERS_PATH="${prefix}/${libdir}"/dri
 export VK_ICD_FILENAMES="${prefix}"/share/vulkan/icd.d/"${vk_icd}"
-exec "$@"
+LD_PRELOAD="${GCC_ASAN_PRELOAD}" exec "$@"
