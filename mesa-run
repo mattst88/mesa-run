@@ -29,8 +29,8 @@ esac
 case "$1" in
 wipe|wipeout)
 	echo "Removing ${builddir}"
-	exec meson setup --wipe "${builddir}"
-	;;
+	rm -r "${builddir}"
+	;&
 configure)
 	export LLVM_MAJOR_VERSION="17"
 	export LLVM_CONFIG="/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/llvm-config"
