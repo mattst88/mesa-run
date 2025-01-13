@@ -32,7 +32,7 @@ wipe|wipeout)
 	rm -r "${builddir}"
 	;&
 configure)
-	export LLVM_MAJOR_VERSION="18"
+	export LLVM_MAJOR_VERSION="19"
 	export LLVM_CONFIG="/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/llvm-config"
 	#export CC="/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/clang"
 	#export CXX="/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/clang++"
