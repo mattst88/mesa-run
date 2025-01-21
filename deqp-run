@@ -112,6 +112,7 @@ DEQP_RUNNER_ARGS=(
 	--caselist "${CASELIST}"
 	--deqp "${DEQP_BIN}"
 	--testlog-to-xml "${TESTLOG_TO_XML}"
+	--timeout 360
 	--output "${OUTPUT_DIR}"
 )
 
