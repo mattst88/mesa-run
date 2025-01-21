@@ -38,6 +38,8 @@ configure)
 	#export CXX="/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/clang++"
 	#export CC_LD="/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/lld"
 	#export CXX_LD="${CC_LD}"
+	export CC_LD="mold"
+	export CXX_LD="mold"
 
 	args=(
 		--pkg-config-path "/usr/lib/llvm/${LLVM_MAJOR_VERSION}/lib64/pkgconfig"
