@@ -47,7 +47,7 @@ configure)
 		-Dc_args="${cflags}"
 		-Dcpp_args="${cxxflags}"
 		-Dtools="${tools}"
-		-Dbuild-tests=true
+		-Dbuild-tests=false
 		-Dvulkan-drivers="${vulkan_drivers}"
 		-Dgallium-drivers="${gallium_drivers}"
 		-Dgallium-rusticl=false
