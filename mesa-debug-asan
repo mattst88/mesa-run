@@ -4,7 +4,7 @@ export cflags="-ggdb3 -O0 -march=native -pipe"
 export cxxflags="${cflags}"
 export buildtype=debug
 export builddir=~/projects/mesa/build-debug-asan
-export extra_args=-Db_sanitize="address,undefined"
+export extra_args="-Db_sanitize=address,undefined:-Db_lundef=false"
 
 export GCC_ASAN_PRELOAD=$(gcc -print-file-name=libasan.so)
 export CLANG_ASAN_PRELOAD=$(clang -print-file-name=libclang_rt.asan-x86_64.so)

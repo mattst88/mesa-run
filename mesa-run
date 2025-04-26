@@ -8,6 +8,8 @@ die() {
 [[ -z ${builddir} ]] && die "builddir must be set"
 prefix="${builddir}"/install
 
+IFS=: read -r -a extra_args <<< "${extra_args}"
+
 machine=$(uname -m)
 case "$machine" in
 x86_64)
