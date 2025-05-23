@@ -53,7 +53,6 @@ configure)
 		-Dgallium-drivers="${gallium_drivers}"
 		-Dgallium-rusticl=false
 		-Dgallium-va=disabled
-		-Dgallium-xa=disabled
 		-Dvulkan-beta=true
 		-Dbuildtype="${buildtype}"
 		-Dbackend=ninja
