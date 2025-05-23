@@ -34,7 +34,29 @@ wipe|wipeout)
 	;&
 configure)
 	export LLVM_MAJOR_VERSION="19"
-	export LLVM_CONFIG="/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/llvm-config"
+	llvm_config_paths=(
+		"/usr/bin/llvm-config-${LLVM_MAJOR_VERSION}"
+		"/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/llvm-config"
+	)
+	for llvm_config in "${llvm_config_paths[@]}"; do
+		if [[ -x "${llvm_config}" ]]; then
+			export LLVM_CONFIG="${llvm_config}"
+			break
+		fi
+	done
+
+	llvm_pkg_config_paths=(
+		"/usr/lib/llvm/${LLVM_MAJOR_VERSION}/lib64/pkgconfig"
+		"/usr/lib/x86_64-linux-gnu/pkgconfig"
+	)
+	for llvm_pkg_config_path in "${llvm_pkg_config_paths[@]}"; do
+		if [[ -f "${llvm_pkg_config_path}/LLVMSPIRVLib.pc" ]]; then
+			export LLVM_CONFIG="${llvm_config}"
+			spirv_llvm_translator_pkg_config_path="${llvm_pkg_config_path}"
+			break
+		fi
+	done
+
 	#export CC="/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/clang"
 	#export CXX="/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/clang++"
 	#export CC_LD="/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/lld"
@@ -43,7 +65,7 @@ configure)
 	export CXX_LD="mold"
 
 	args=(
-		--pkg-config-path "/usr/lib/llvm/${LLVM_MAJOR_VERSION}/lib64/pkgconfig"
+		--pkg-config-path "${spirv_llvm_translator_pkg_config_path}"
 		-Dprefix="${prefix}"
 		-Dc_args="${cflags}"
 		-Dcpp_args="${cxxflags}"
