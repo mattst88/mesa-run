@@ -48,6 +48,12 @@ readonly -a DEQP_OPTIONS=(
 	--deqp-visibility=hidden
 )
 
+mode=execute
+if [[ $1 == --cmd ]]; then
+	mode=print-command
+	shift
+fi
+
 if [[ $# -eq 1 ]]; then
 	if [[ $1 == dEQP-* ]]; then
 		single_test="$1"
@@ -90,6 +96,10 @@ DEQP_BIN="$(realpath "${DEQP_BIN}")"
 
 if [[ -n $single_test ]]; then
 	cd "$(dirname "${DEQP_BIN}")" || die "can't cd"
+	if [[ $mode == print-command ]]; then
+		echo "${DEQP_BIN}" "${DEQP_OPTIONS[@]}" -n "${single_test}"
+		exit
+	fi
 	exec "${DEQP_BIN}" "${DEQP_OPTIONS[@]}" -n "${single_test}"
 fi
 
@@ -116,4 +126,8 @@ DEQP_RUNNER_ARGS=(
 	--output "${OUTPUT_DIR}"
 )
 
+if [[ $mode == print-command ]]; then
+	echo deqp-runner run "${DEQP_RUNNER_ARGS[@]}" -- "${DEQP_OPTIONS[@]}"
+	exit
+fi
 exec deqp-runner run "${DEQP_RUNNER_ARGS[@]}" -- "${DEQP_OPTIONS[@]}"
