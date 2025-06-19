@@ -4,7 +4,7 @@ A collection of scripts to build and test [Mesa](https://www.mesa3d.org/) withou
 
 ## Scripts
 
-- [nj](nj) - Run [ninja](https://github.com/ninja-build/ninja) from anywhere in the project git repository. (upstream: [nj repo](gitlab.freedesktop.org/kwg/nj))
+- [nj](nj) - Run [ninja](https://github.com/ninja-build/ninja) from anywhere in the project git repository. (upstream: [nj repo](https://gitlab.freedesktop.org/kwg/nj))
 - [mesa-run](mesa-run) - helper script. Not used directly.
 - [mesa-debug](mesa-debug) - Debug build
 - [mesa-debug-asan](mesa-debug-asan) - Debug build with [AddressSanitizer](https://github.com/google/sanitizers/wiki/AddressSanitizer)
