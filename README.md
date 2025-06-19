@@ -47,6 +47,19 @@ $ deqp-run dEQP-VK.graphicsfuzz.spv-stable-pillars-volatile-nontemporal-store
 $ deqp-run vk
 ```
 
+#### Full command
+
+```console
+$ deqp-run --cmd vk
+deqp-runner run --caselist [...]
+```
+
+Particularly useful for running a single test under `gdb`:
+
+```console
+$ mesa-gdb $(deqp-run --cmd dEQP-VK.graphicsfuzz.spv-stable-pillars-volatile-nontemporal-store)
+```
+
 ### Make Markdown table of dEQP test results
 
 ```console
