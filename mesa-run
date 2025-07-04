@@ -33,7 +33,7 @@ wipe|wipeout)
 	rm -r "${builddir}"
 	;&
 configure)
-	export LLVM_MAJOR_VERSION="19"
+	export LLVM_MAJOR_VERSION="20"
 	llvm_config_paths=(
 		"/usr/bin/llvm-config-${LLVM_MAJOR_VERSION}"
 		"/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/llvm-config"
