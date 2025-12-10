@@ -13,11 +13,12 @@ IFS=: read -r -a extra_args <<< "${extra_args}"
 machine=$(uname -m)
 case "$machine" in
 x86_64)
-	vulkan_drivers=intel
-	gallium_drivers=iris
-	tools=drm-shim,intel
+	vulkan_drivers=amd
+	gallium_drivers=radeonsi
+	tools=drm-shim
 	extra_args+=(
-		-Dintel-rt=disabled
+		-Dllvm=disabled
+		-Damd-use-llvm=false
 	)
 	;;
 aarch64|arm*)
@@ -74,7 +75,7 @@ configure)
 		-Dvulkan-drivers="${vulkan_drivers}"
 		-Dgallium-drivers="${gallium_drivers}"
 		-Dgallium-rusticl=false
-		-Dgallium-va=disabled
+		-Dgallium-va=enabled
 		-Dintel-elk=false
 		-Dvulkan-beta=true
 		-Dbuildtype="${buildtype}"
