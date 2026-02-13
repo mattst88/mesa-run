@@ -49,17 +49,34 @@ wipe|wipeout)
 	rm -r "${builddir}"
 	;&
 configure)
-	export LLVM_MAJOR_VERSION="20"
-	llvm_config_paths=(
-		"/usr/bin/llvm-config-${LLVM_MAJOR_VERSION}"
-		"/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/llvm-config"
+	llvm_config_globs=(
+		"/usr/bin/llvm-config-*"
+		"/usr/lib/llvm/*/bin/llvm-config"
 	)
-	for llvm_config in "${llvm_config_paths[@]}"; do
-		if [[ -x "${llvm_config}" ]]; then
-			export LLVM_CONFIG="${llvm_config}"
-			break
+
+	if [[ -n ${MESA_LLVM_VERSION} ]]; then
+		llvm_config_globs=(
+			"/usr/bin/llvm-config-${MESA_LLVM_VERSION}"
+			"/usr/lib/llvm/${MESA_LLVM_VERSION}/bin/llvm-config"
+		)
+	fi
+
+	# Find the llvm-config with the highest version
+	LLVM_CONFIG=""
+	for path in $(ls -d ${llvm_config_globs[@]} 2>/dev/null); do
+		if [[ -x "${path}" ]]; then
+			if [[ -z ${LLVM_CONFIG} ]] || \
+			   [[ $("${path}" --version) > $("${LLVM_CONFIG}" --version) ]]; then
+				LLVM_CONFIG="${path}"
+			fi
 		fi
 	done
+
+	if [[ -z ${LLVM_CONFIG} ]]; then
+		die "No llvm-config found. Set MESA_LLVM_VERSION or install LLVM."
+	fi
+	export LLVM_CONFIG
+	export LLVM_MAJOR_VERSION=$("${LLVM_CONFIG}" --version | cut -d. -f1)
 
 	llvm_pkg_config_paths=(
 		"/usr/lib/llvm/${LLVM_MAJOR_VERSION}/lib64/pkgconfig"
