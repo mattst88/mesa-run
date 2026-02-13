@@ -3,6 +3,6 @@
 export cflags="-O2 -march=native -fno-omit-frame-pointer -pipe"
 export cxxflags="${cflags}"
 export buildtype=release
-export builddir=~/projects/mesa/build-release
+export builddir=${MESA_SRCDIR:-~/projects/mesa}/build-release
 
 exec mesa-run "$@"

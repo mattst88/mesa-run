@@ -3,6 +3,6 @@
 export cflags="-ggdb3 -O2 -march=native -fno-omit-frame-pointer -pipe"
 export cxxflags="${cflags}"
 export buildtype=debugoptimized
-export builddir=~/projects/mesa/build-debug-optimized
+export builddir=${MESA_SRCDIR:-~/projects/mesa}/build-debug-optimized
 
 exec mesa-run "$@"
