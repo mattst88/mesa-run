@@ -25,6 +25,7 @@ x86_64)
 	amd)
 		vulkan_drivers=amd
 		gallium_drivers=radeonsi
+		gallium_va=enabled
 		tools=drm-shim
 		extra_args+=(
 			-Dllvm=disabled
@@ -107,7 +108,7 @@ configure)
 		-Dvulkan-drivers="${vulkan_drivers}"
 		-Dgallium-drivers="${gallium_drivers}"
 		-Dgallium-rusticl=false
-		-Dgallium-va=disabled
+		-Dgallium-va="${gallium_va:-disabled}"
 		-Dintel-elk=false
 		-Dvulkan-beta=true
 		-Dbuildtype="${buildtype}"
