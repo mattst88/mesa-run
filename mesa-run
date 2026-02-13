@@ -115,7 +115,7 @@ configure)
 		"${extra_args[@]}"
 		"${builddir}"
 	)
-	echo meson setup --reconfigure "${args[@]}"
+	printf '%q ' meson setup --reconfigure "${args[@]}"; echo
 	exec meson setup --reconfigure "${args[@]}"
 	;;
 build)
