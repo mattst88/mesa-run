@@ -13,12 +13,28 @@ IFS=: read -r -a extra_args <<< "${extra_args}"
 machine=$(uname -m)
 case "$machine" in
 x86_64)
-	vulkan_drivers=intel
-	gallium_drivers=iris
-	tools=drm-shim,intel
-	extra_args+=(
-		-Dintel-rt=disabled
-	)
+	case "${MESA_GPU:-intel}" in
+	intel)
+		vulkan_drivers=intel
+		gallium_drivers=iris
+		tools=drm-shim,intel
+		extra_args+=(
+			-Dintel-rt=disabled
+		)
+		;;
+	amd)
+		vulkan_drivers=amd
+		gallium_drivers=radeonsi
+		tools=drm-shim
+		extra_args+=(
+			-Dllvm=disabled
+			-Damd-use-llvm=false
+		)
+		;;
+	*)
+		die "Unknown MESA_GPU value '${MESA_GPU}'. Must be intel or amd."
+		;;
+	esac
 	;;
 aarch64|arm*)
 	vulkan_drivers=freedreno
