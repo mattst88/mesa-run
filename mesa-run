@@ -91,12 +91,47 @@ configure)
 		fi
 	done
 
-	#export CC="/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/clang"
-	#export CXX="/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/clang++"
-	#export CC_LD="/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/lld"
-	#export CXX_LD="${CC_LD}"
-	export CC_LD="mold"
-	export CXX_LD="mold"
+	case "${MESA_CC:-gcc}" in
+	clang)
+		export CC="clang-${LLVM_MAJOR_VERSION}"
+		export CXX="clang++-${LLVM_MAJOR_VERSION}"
+		;;
+	gcc)
+		export CC="gcc"
+		export CXX="g++"
+		;;
+	*)
+		die "Unknown MESA_CC value '${MESA_CC}'. Must be gcc or clang."
+		;;
+	esac
+
+	case "${MESA_LD:-bfd}" in
+	mold)
+		export CC_LD="mold"
+		export CXX_LD="mold"
+		;;
+	lld)
+		lld_paths=(
+			"lld-${LLVM_MAJOR_VERSION}"
+			"/usr/lib/llvm/${LLVM_MAJOR_VERSION}/bin/ld.lld"
+		)
+		for path in "${lld_paths[@]}"; do
+			if type -P "${path}" &>/dev/null || [[ -x "${path}" ]]; then
+				export CC_LD="${path}"
+				export CXX_LD="${path}"
+				break
+			fi
+		done
+		[[ -z ${CC_LD} ]] && die "lld ${LLVM_MAJOR_VERSION} not found"
+		;;
+	bfd)
+		export CC_LD="bfd"
+		export CXX_LD="bfd"
+		;;
+	*)
+		die "Unknown MESA_LD value '${MESA_LD}'. Must be bfd, mold, or lld."
+		;;
+	esac
 
 	args=(
 		--pkg-config-path "${spirv_llvm_translator_pkg_config_path}"
@@ -116,7 +151,13 @@ configure)
 		"${extra_args[@]}"
 		"${builddir}"
 	)
-	printf '%q ' meson setup --reconfigure "${args[@]}"; echo
+	env_prefix=()
+	[[ -n ${CC} ]] && env_prefix+=(CC="${CC}")
+	[[ -n ${CXX} ]] && env_prefix+=(CXX="${CXX}")
+	[[ -n ${CC_LD} ]] && env_prefix+=(CC_LD="${CC_LD}")
+	[[ -n ${CXX_LD} ]] && env_prefix+=(CXX_LD="${CXX_LD}")
+	[[ -n ${LLVM_CONFIG} ]] && env_prefix+=(LLVM_CONFIG="${LLVM_CONFIG}")
+	printf '%q ' "${env_prefix[@]}" meson setup --reconfigure "${args[@]}"; echo
 	exec meson setup --reconfigure "${args[@]}"
 	;;
 build)
