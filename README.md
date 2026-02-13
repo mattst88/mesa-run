@@ -14,6 +14,30 @@ A collection of scripts to build and test [Mesa](https://www.mesa3d.org/) withou
 - [deqp-run](deqp-run) - Run dEQP test suites
 - [deqp-results-to-markdown](deqp-results-to-markdown) - Generate Markdown table of dEQP test suite results
 
+## Installation
+
+```console
+$ make install
+```
+
+This creates symlinks in `~/.local/bin` (or `$XDG_BIN_HOME` if set). To uninstall:
+
+```console
+$ make uninstall
+```
+
+## Configuration
+
+The following environment variables can be set to customize behavior:
+
+| Variable             | Values              | Default           | Description                       |
+| -------------------- | ------------------- | ----------------- | --------------------------------- |
+| `MESA_SRCDIR`        | path                | `~/projects/mesa` | Mesa source directory             |
+| `MESA_GPU`           | `intel`, `amd`      | `intel`           | GPU driver to build (x86_64 only) |
+| `MESA_CC`            | `gcc`, `clang`      | `gcc`             | C/C++ compiler                    |
+| `MESA_LD`            | `bfd`, `mold`, `lld`| `bfd`             | Linker                            |
+| `MESA_LLVM_VERSION`  | version number      | auto-detected     | LLVM major version                |
+
 ## Examples
 
 ### Configure and build debug build
