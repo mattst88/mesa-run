@@ -49,7 +49,7 @@
 # blank file if you want it to install elsewhere.
 # _____________________________________________________________________
 
-topdir=$(git rev-parse --show-toplevel)
+topdir=${MESA_SRCDIR:-$(git rev-parse --show-toplevel)}
 if [ -f "$topdir/build.ninja" ]; then
     # In-tree build exists, use that.
     builddir="${topdir}"
